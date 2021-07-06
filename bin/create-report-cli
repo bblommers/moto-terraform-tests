@@ -7,21 +7,35 @@ import xml.etree.ElementTree as ET
 def get_summary(reports):
     passed = failures = errors = skipped = total = 0
     for f in reports:
-        for event, elem in ET.iterparse(f, events=('start',)):
-            if elem.tag == 'testsuite':
-                d = dict(elem.attrib)
-                d['time'] = float(d['time'])
-                d['tests'] = float(d['tests'])
-                d['errors'] = float(d['errors'])
-                d['failures'] = float(d['failures'])
-                d['skipped'] = float(d['skipped'])
-                d['passed'] = d['tests'] - (d['errors'] + d['failures'] + d['skipped'])
-                print(d)
-                #
-                total += d["tests"]
-                passed += d["passed"]
-                failures += d["failures"]
-                errors += d["errors"]
+        try:
+            for event, elem in ET.iterparse(f, events=('start',)):
+                if elem.tag == 'testsuite':
+                    d = dict(elem.attrib)
+                    d['time'] = float(d['time'])
+                    d['tests'] = float(d['tests'])
+                    d['errors'] = float(d['errors'])
+                    d['failures'] = float(d['failures'])
+                    d['skipped'] = float(d['skipped'])
+                    d['passed'] = d['tests'] - (d['errors'] + d['failures'] + d['skipped'])
+                    print(d)
+                    #
+                    total += d["tests"]
+                    passed += d["passed"]
+                    failures += d["failures"]
+                    errors += d["errors"]
+        except Exception as e:
+            print(e)
+            print("---------")
+            try:
+                with open(f) as f_content:
+                    content = f_content.readlines()
+
+                for line in content:
+                    print(line)
+
+                print("---------")
+            except Exception as e2:
+                print(e2)
 
     print('===========================================')
     print("Total cases: {}".format(total))
