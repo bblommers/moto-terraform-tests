@@ -1,0 +1,56 @@
+diff --git a/aws/config.go b/aws/config.go
+index f436c2402..f462a1ddf 100644
+--- a/aws/config.go
++++ b/aws/config.go
+@@ -464,6 +464,9 @@ func (c *Config) Client() (interface{}, error) {
+ 		dnsSuffix = p.DNSSuffix()
+ 	}
+ 
++	// CUSTOM: insert custom endpoints
++	c.Endpoints = localEndpoints
++
+ 	client := &AWSClient{
+ 		accessanalyzerconn:                  accessanalyzer.New(sess.Copy(&aws.Config{Endpoint: aws.String(c.Endpoints["accessanalyzer"])})),
+ 		accountid:                           accountID,
+diff --git a/aws/provider.go b/aws/provider.go
+index 1a20232f3..96ba563ab 100644
+--- a/aws/provider.go
++++ b/aws/provider.go
+@@ -1232,6 +1232,9 @@ func Provider() *schema.Provider {
+ var descriptions map[string]string
+ var endpointServiceNames []string
+ 
++const localEndpoint = "http://localhost:5000"
++var localEndpoints map[string]string
++
+ func init() {
+ 	descriptions = map[string]string{
+ 		"region": "The region where AWS operations will take place. Examples\n" +
+@@ -1442,9 +1445,17 @@ func init() {
+ 		"workspaces",
+ 		"xray",
+ 	}
++
++	// CUSTOM: Create custom endpoints
++	localEndpoints = map[string]string{}
++	for _, name := range endpointServiceNames {
++		localEndpoints[name] = localEndpoint
++	}
++
+ }
+ 
+ func providerConfigure(d *schema.ResourceData, terraformVersion string) (interface{}, error) {
++
+ 	config := Config{
+ 		AccessKey:               d.Get("access_key").(string),
+ 		SecretKey:               d.Get("secret_key").(string),
+@@ -1453,7 +1464,8 @@ func providerConfigure(d *schema.ResourceData, terraformVersion string) (interfa
+ 		Region:                  d.Get("region").(string),
+ 		CredsFilename:           d.Get("shared_credentials_file").(string),
+ 		DefaultTagsConfig:       expandProviderDefaultTags(d.Get("default_tags").([]interface{})),
+-		Endpoints:               make(map[string]string),
++		// Endpoints:            make(map[string]string),
++		Endpoints:               localEndpoints,
+ 		MaxRetries:              d.Get("max_retries").(int),
+ 		IgnoreTagsConfig:        expandProviderIgnoreTags(d.Get("ignore_tags").([]interface{})),
+ 		Insecure:                d.Get("insecure").(bool),
