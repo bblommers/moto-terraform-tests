@@ -58,12 +58,10 @@ jobs:
     - name: Install project dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install junit2html
     - name: Test
       run: |
         bin/run-tests TestAccAWSSQSQueue
     - name: "Create report"
       run: |
         bin/create-report
-        bin/create-report-html
-        cat build/report.html
+        bin/create-report-cli
