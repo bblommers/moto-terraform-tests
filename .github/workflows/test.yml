@@ -60,7 +60,7 @@ jobs:
         python -m pip install --upgrade pip
     - name: Test
       run: |
-        bin/run-tests -e moto-tests.excl.txt TestAccAWS
+        bin/run-tests -i moto-tests.success.txt
     - name: "Create report"
       run: |
         bin/create-report
