@@ -58,6 +58,11 @@ jobs:
     - name: Install project dependencies
       run: |
         python -m pip install --upgrade pip
+    - name: Start MotoServer
+      run: |
+        python moto/setup.py sdist
+        docker run --rm -t --name motoserver -e TEST_SERVER_MODE=true -e AWS_SECRET_ACCESS_KEY=server_secret -e AWS_ACCESS_KEY_ID=server_key -v `pwd`/moto:/moto -p 5000:5000 -v /var/run/docker.sock:/var/run/docker.sock python:3.7-buster /moto/travis_moto_server.sh &
+        python moto/wait_for.py
     - name: Test
       run: |
         bin/run-tests -i moto-tests.success.txt
