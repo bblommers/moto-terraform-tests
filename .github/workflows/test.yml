@@ -46,6 +46,11 @@ jobs:
       with:
         fetch-depth: 1
         submodules: 'true'
+    - name: Checkout Moto repo
+      uses: actions/checkout@v2
+      with:
+        repository: spulec/moto
+        path: moto
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v2
       with:
