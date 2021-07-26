@@ -73,7 +73,7 @@ jobs:
         cd ..
     - name: Test
       run: |
-        bin/run-tests -i moto-tests.success.txt
+        bin/run-tests -i moto-tests.success.txt -e moto-tests.excl.txt
     - name: "Create report"
       run: |
         bin/create-report
