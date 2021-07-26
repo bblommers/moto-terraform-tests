@@ -73,7 +73,7 @@ jobs:
         cd ..
     - name: Test
       run: |
-        bin/run-tests TestAccAWS
+        bin/run-tests -i moto-tests.success.txt
     - name: "Create report"
       run: |
         bin/create-report
