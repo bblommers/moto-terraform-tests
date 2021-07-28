@@ -43,6 +43,10 @@ def get_summary(reports):
         pct = round((nr / total) * 100, 2)
         print("{}: {} ({}%)".format(name, nr, pct))
 
+    failed_tests = failures + errors
+    if failed_tests > 0:
+        raise Exception("{} Terraform tests failed!".format(failed_tests))
+
 
 def main():
     reports = glob.glob('build/tests/*.xml')
