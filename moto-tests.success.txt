@@ -4,4 +4,3 @@ TestAccAWSBillingServiceAccount
 TestAccAWSCallerIdentity
 TestAccAWSCloudTrailServiceAccount
 TestAccAWSCloudWatchDashboard
-TestAccAWSEc2TransitGatewayRouteTableAssociation
