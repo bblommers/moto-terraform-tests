@@ -96,42 +96,9 @@ function run_tests() {
 
     tail -F ${TEST_LOG} 2> /dev/null | stdbuf -oL egrep "(=== RUN|=== CONT|=== PAUSE|FAIL|PASS|SKIP)" &
 
-    export TF_LOG=debug
+    export TF_LOG=warn
 
-    for t in ${tests}; do
-        # truncate test log
-        echo "" > ${TEST_LOG}
-
-        # touch log for test run
-        log="${BUILD_DIR}/tests/${t}.log"
-        echo "" > ${log}
-
-        echo "[mtt.runner] starting $t" | tee -a ${log}
-
-        run_watchdog $t &
-        pid_watchdog=$!
-
-        forward_test_log $log &
-        pid_forward_test_log=$!
-
-        sleep 1
-
-        if [[ $t =~ "_" ]]; then
-            arg=$t
-        else
-            arg="${t}_"
-        fi
-
-        run_test "${arg}" 2>&1 | stdbuf -oL tee -a ${TEST_LOG} > /dev/null
-
-        kill $pid_watchdog &> /dev/null
-        kill $pid_forward_test_log &> /dev/null
-
-        wait $pid_watchdog $pid_forward_test_log
-        echo "[mtt.runner] completed $t" | tee -a ${log}
-        sleep 1
-
-    done
+    run_test "${tests}"
 }
 
 function main() {

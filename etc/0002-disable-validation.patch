@@ -1,0 +1,42 @@
+diff --git a/aws/config.go b/aws/config.go
+index cd7e5638e..0706f76c4 100644
+--- a/aws/config.go
++++ b/aws/config.go
+@@ -172,7 +172,6 @@ import (
+ 	"github.com/aws/aws-sdk-go/service/xray"
+ 	awsbase "github.com/hashicorp/aws-sdk-go-base"
+ 	"github.com/hashicorp/aws-sdk-go-base/tfawserr"
+-	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/logging"
+ 	"github.com/terraform-providers/terraform-provider-aws/aws/internal/keyvaluetags"
+ 	"github.com/terraform-providers/terraform-provider-aws/version"
+ )
+@@ -426,16 +425,16 @@ func (c *Config) Client() (interface{}, error) {
+ 		CallerDocumentationURL:      "https://registry.terraform.io/providers/hashicorp/aws",
+ 		CallerName:                  "Terraform AWS Provider",
+ 		CredsFilename:               c.CredsFilename,
+-		DebugLogging:                logging.IsDebugOrHigher(),
++		DebugLogging:                false,
+ 		IamEndpoint:                 c.Endpoints["iam"],
+-		Insecure:                    c.Insecure,
++		Insecure:                    true,
+ 		MaxRetries:                  1,
+ 		Profile:                     c.Profile,
+ 		Region:                      c.Region,
+ 		SecretKey:                   c.SecretKey,
+-		SkipCredsValidation:         c.SkipCredsValidation,
+-		SkipMetadataApiCheck:        c.SkipMetadataApiCheck,
+-		SkipRequestingAccountId:     c.SkipRequestingAccountId,
++		SkipCredsValidation:         true,
++		SkipMetadataApiCheck:        true,
++		SkipRequestingAccountId:     true,
+ 		StsEndpoint:                 c.Endpoints["sts"],
+ 		Token:                       c.Token,
+ 		UserAgentProducts: []*awsbase.UserAgentProduct{
+@@ -450,6 +449,7 @@ func (c *Config) Client() (interface{}, error) {
+ 	if err != nil {
+ 		return nil, fmt.Errorf("error configuring Terraform AWS Provider: %w", err)
+ 	}
++	accountID = "123456789012"
+ 
+ 	if accountID == "" {
+ 		log.Printf("[WARN] AWS account ID not found for provider. See https://www.terraform.io/docs/providers/aws/index.html#skip_requesting_account_id for implications.")

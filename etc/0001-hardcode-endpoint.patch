@@ -1,7 +1,16 @@
 diff --git a/aws/config.go b/aws/config.go
-index f436c2402..f462a1ddf 100644
+index f436c2402..cd7e5638e 100644
 --- a/aws/config.go
 +++ b/aws/config.go
+@@ -429,7 +429,7 @@ func (c *Config) Client() (interface{}, error) {
+ 		DebugLogging:                logging.IsDebugOrHigher(),
+ 		IamEndpoint:                 c.Endpoints["iam"],
+ 		Insecure:                    c.Insecure,
+-		MaxRetries:                  c.MaxRetries,
++		MaxRetries:                  1,
+ 		Profile:                     c.Profile,
+ 		Region:                      c.Region,
+ 		SecretKey:                   c.SecretKey,
 @@ -464,6 +464,9 @@ func (c *Config) Client() (interface{}, error) {
  		dnsSuffix = p.DNSSuffix()
  	}
